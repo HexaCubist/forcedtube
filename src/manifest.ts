@@ -16,10 +16,10 @@ const manifest = {
   content_scripts: [
     {
       js: ["src/entries/contentScript/primary/main.ts"],
-      matches: ["*://*/*"],
+      matches: ["https://www.youtube.com/watch?v=*"],
     },
   ],
-  host_permissions: ["*://*/*"],
+  host_permissions: ["https://www.youtube.com/*"],
   icons: {
     16: "icons/16.png",
     19: "icons/19.png",

@@ -4,7 +4,7 @@ import setupAdWatcher from "./adWatcher";
 import generateQuiz from "./quizGenerator";
 
 setupAdWatcher();
-// generateQuiz(transcript);
+// setupNetworkListener(generateQuiz);
 
 let app: App;
 

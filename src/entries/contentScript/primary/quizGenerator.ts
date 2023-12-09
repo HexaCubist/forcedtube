@@ -5,10 +5,9 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-const prompt = (transcript) => `
-here is the transcript for an Add
+const prompt = (transcript) => `Here is the transcript for an ad:
  "${transcript}"
-write me three difficult multi-choice questions to test the viwers comprehension of this and indicate the correct answer
+Write three difficult multi-choice questions to test the viwers comprehension of this and indicate the correct answer. Your response should be in JSON:
 `
 
 const generateQuiz = async (transcript: string) => {
@@ -17,7 +16,10 @@ const generateQuiz = async (transcript: string) => {
             { role: 'user', content: prompt(transcript) },
         ],
         model: 'gpt-4-turbo',
+        response_format: {type: "json_object"}
     });
+
+    return chatCompletion.choices[0].message.content;
 }
 
 export default generateQuiz;

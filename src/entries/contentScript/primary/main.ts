@@ -1,10 +1,11 @@
 import renderContent from "../renderContent";
 import App from "./App.svelte";
 import setupAdWatcher from "./adWatcher";
+import setupNetworkListener from "./networkListener";
 import generateQuiz from "./quizGenerator";
 
 setupAdWatcher();
-// setupNetworkListener(generateQuiz);
+setupNetworkListener(generateQuiz);
 
 let app: App;
 

@@ -10,6 +10,9 @@ const manifest = {
     },
     default_popup: "src/entries/popup/index.html",
   },
+  permissions: [
+    "webRequest"
+  ],
   background: {
     service_worker: "src/entries/background/main.ts",
   },

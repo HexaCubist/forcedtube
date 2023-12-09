@@ -28,4 +28,4 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
   // keep the script alive for an async response
   return true;
-})
+});

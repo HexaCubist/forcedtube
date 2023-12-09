@@ -31,6 +31,8 @@
     "web-ext": "^7.6.2"
   },
   "dependencies": {
+    "svelte-portal": "^2.2.0",
+    "openai": "^4.20.1",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
     "webextension-polyfill": "^0.10.0"

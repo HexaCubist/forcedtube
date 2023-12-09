@@ -11,7 +11,8 @@ const manifest = {
     default_popup: "src/entries/popup/index.html",
   },
   permissions: [
-    "webRequest"
+    "webRequest",
+    "storage"
   ],
   background: {
     service_worker: "src/entries/background/main.ts",

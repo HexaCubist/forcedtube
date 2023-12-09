@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "../app.postcss";
+  import "$lib/app.postcss";
   import { autoUpdate } from "@floating-ui/dom";
   import { createEventDispatcher, onMount } from "svelte";
   // import logo from "~/assets/logo.svg";

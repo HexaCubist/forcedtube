@@ -9,7 +9,7 @@
     "watch": "vite build --watch --mode development --minify false",
     "dev": "vite",
     "serve:firefox": "web-ext run --start-url \"about:debugging#/runtime/this-firefox\"  --source-dir ./dist/",
-    "serve:chrome": "web-ext run -t chromium --mute-audio --start-url \"https://www.youtube.com/watch?v=B6McOGL1l2k\" --source-dir ./dist/",
+    "serve:chrome": "web-ext run -t chromium --start-url \"https://www.youtube.com/watch?v=B6McOGL1l2k\" --source-dir ./dist/",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "license": "MIT",

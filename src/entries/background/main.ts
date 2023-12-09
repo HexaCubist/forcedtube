@@ -34,6 +34,6 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
 
   // persist the background script;
   return true;
-})
+});
 
 console.log("ran background script");

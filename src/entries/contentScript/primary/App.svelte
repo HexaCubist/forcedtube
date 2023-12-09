@@ -1,16 +1,20 @@
 <script lang="ts">
   import "../app.postcss";
   import { autoUpdate } from "@floating-ui/dom";
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   // import logo from "~/assets/logo.svg";
   import Portal from "svelte-portal";
   import { fade } from "svelte/transition";
+  const dispatch = createEventDispatcher();
 
-  export let question: {
-    text: string;
-    answers: string[];
-    correctAnswer: number;
-  } | null = null;
+  export let question:
+    | {
+        text: string;
+        answers: string[];
+        correctAnswer: number;
+      }[]
+    | null = null;
+  export let questionNumber: number = 0;
 
   // const logoImageUrl = new URL(logo, import.meta.url).href;
   let videoPlayer: HTMLDivElement;
@@ -31,8 +35,8 @@
     const getPos = () => {
       videoPlayer = document.querySelector("#player");
       const videoPlayerRect = videoPlayer.getBoundingClientRect();
-      player.Top = videoPlayerRect.top;
-      player.Left = videoPlayerRect.left;
+      player.Top = videoPlayerRect.top + window.scrollY;
+      player.Left = videoPlayerRect.left + window.scrollX;
       player.Width = videoPlayerRect.width;
       player.Height = videoPlayerRect.height;
     };
@@ -64,16 +68,22 @@
           <i>almost</i> as much as we value making money. To prove that you are a
           valuable customer, please answer the following question:
         </p>
-        <p class="text-xl">
-          {question.text}
+        <p class="text-2xl mt-4 text-center">
+          {question[questionNumber].text}
         </p>
         <div class="grid grid-cols-2 grid-rows-2 gap-8 mt-4">
-          {#each question.answers as answer, i}
+          {#each question[questionNumber].answers as answer, i}
             <button
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-6 px-8 rounded"
+              class="bg-blue-500 transition hover:bg-blue-700 text-white font-bold py-6 px-8 rounded"
               on:click={() => {
-                if (i === question.correctAnswer) {
+                if (i === question[questionNumber].correctAnswer) {
                   alert("Correct!");
+                  if (questionNumber < question.length - 1) {
+                    questionNumber++;
+                  } else {
+                    question = null;
+                    dispatch("finish", question);
+                  }
                 } else {
                   alert("Incorrect!");
                 }

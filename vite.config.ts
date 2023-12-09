@@ -3,6 +3,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import webExtension from "@samrum/vite-plugin-web-extension";
 import path from "path";
 import { getManifest } from "./src/manifest";
+import scopeTailwind from "vite-plugin-scope-tailwind";
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
@@ -12,6 +13,7 @@ export default defineConfig(() => {
       webExtension({
         manifest: getManifest(),
       }),
+      // scopeTailwind(),
     ],
     resolve: {
       alias: {

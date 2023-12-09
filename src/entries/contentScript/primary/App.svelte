@@ -1,3 +1,5 @@
+<svelte:options accessors={true} />
+
 <script lang="ts">
   import "$lib/app.postcss";
   import { autoUpdate } from "@floating-ui/dom";
@@ -15,6 +17,7 @@
       }[]
     | null = null;
   export let questionNumber: number = 0;
+  export let show: boolean = false;
 
   // const logoImageUrl = new URL(logo, import.meta.url).href;
   let videoPlayer: HTMLDivElement;
@@ -23,6 +26,13 @@
   onMount(() => {
     videoPlayer = document.querySelector("#player");
   });
+  $: if (show) {
+    videoPlayer = document.querySelector("#player");
+    const videoEl: HTMLVideoElement = document.querySelector("#player video");
+    if (videoEl) {
+      videoEl.pause();
+    }
+  }
   // Get position of video player to position the overlay
   const player = {
     Top: 0,
@@ -54,46 +64,48 @@
   style:width="{player.Width}px"
   style:height="{player.Height}px"
 >
-  {#if question}
+  {#if show}
     <div
       transition:fade
       class=" w-full h-full rounded-xl bg-black bg-opacity-40 backdrop-blur-md p-20"
     >
-      <div class="bg-white text-black rounded-xl p-14 shadow w-full h-full">
-        <h1 class="text-3xl font-light text-center mb-4">
-          Thank you for watching another advertisment!
-        </h1>
-        <p class="text-xl">
-          We value our customers
-          <i>almost</i> as much as we value making money. To prove that you are a
-          valuable customer, please answer the following question:
-        </p>
-        <p class="text-2xl mt-4 text-center">
-          {question[questionNumber].text}
-        </p>
-        <div class="grid grid-cols-2 grid-rows-2 gap-8 mt-4">
-          {#each question[questionNumber].answers as answer, i}
-            <button
-              class="bg-blue-500 transition hover:bg-blue-700 text-white font-bold py-6 px-8 rounded"
-              on:click={() => {
-                if (i === question[questionNumber].correctAnswer) {
-                  alert("Correct!");
-                  if (questionNumber < question.length - 1) {
-                    questionNumber++;
+      {#if question}
+        <div class="bg-white text-black rounded-xl p-14 shadow w-full h-full">
+          <h1 class="text-3xl font-light text-center mb-4">
+            Thank you for watching another advertisment!
+          </h1>
+          <p class="text-xl">
+            We value our customers
+            <i>almost</i> as much as we value making money. To prove that you are
+            a valuable customer, please answer the following question:
+          </p>
+          <p class="text-2xl mt-4 text-center">
+            {question[questionNumber].text}
+          </p>
+          <div class="grid grid-cols-2 grid-rows-2 gap-8 mt-4">
+            {#each question[questionNumber].answers as answer, i}
+              <button
+                class="bg-blue-500 transition hover:bg-blue-700 text-white font-bold py-6 px-8 rounded"
+                on:click={() => {
+                  if (i === question[questionNumber].correctAnswer) {
+                    alert("Correct!");
+                    if (questionNumber < question.length - 1) {
+                      questionNumber++;
+                    } else {
+                      question = null;
+                      dispatch("finish", question);
+                    }
                   } else {
-                    question = null;
-                    dispatch("finish", question);
+                    alert("Incorrect!");
                   }
-                } else {
-                  alert("Incorrect!");
-                }
-              }}
-            >
-              {answer}
-            </button>
-          {/each}
+                }}
+              >
+                {answer}
+              </button>
+            {/each}
+          </div>
         </div>
-      </div>
+      {/if}
     </div>
   {/if}
 </div>

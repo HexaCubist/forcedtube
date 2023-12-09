@@ -1,5 +1,10 @@
 import renderContent from "../renderContent";
 import App from "./App.svelte";
+import setupAdWatcher from "./adWatcher";
+import generateQuiz from "./quizGenerator";
+
+setupAdWatcher();
+// generateQuiz(transcript);
 
 let app: App;
 

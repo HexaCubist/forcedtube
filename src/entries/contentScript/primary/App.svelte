@@ -18,6 +18,7 @@
     | null = null;
   export let questionNumber: number = 0;
   export let show: boolean = false;
+  export let error: boolean = false;
 
   // const logoImageUrl = new URL(logo, import.meta.url).href;
   let videoPlayer: HTMLDivElement;
@@ -30,7 +31,11 @@
     videoPlayer = document.querySelector("#player");
     const videoEl: HTMLVideoElement = document.querySelector("#player video");
     if (videoEl) {
-      videoEl.pause();
+      if (!error) {
+        videoEl.pause();
+      } else {
+        videoEl.play();
+      }
     }
   }
   // Get position of video player to position the overlay
@@ -56,15 +61,15 @@
   }
 </script>
 
-<div
-  class="absolute"
-  bind:this={floatingEl}
-  style:top="{player.Top}px"
-  style:left="{player.Left}px"
-  style:width="{player.Width}px"
-  style:height="{player.Height}px"
->
-  {#if show}
+{#if show && !error}
+  <div
+    class="absolute"
+    bind:this={floatingEl}
+    style:top="{player.Top}px"
+    style:left="{player.Left}px"
+    style:width="{player.Width}px"
+    style:height="{player.Height}px"
+  >
     <div
       transition:fade
       class=" w-full h-full rounded-xl bg-black bg-opacity-40 backdrop-blur-md p-20"
@@ -86,7 +91,7 @@
             {#each question[questionNumber].answers as answer, i}
               <button
                 class="bg-blue-500 transition hover:bg-blue-700 text-white font-bold py-6 px-8 rounded"
-                on:click={() => {
+                on:click={async () => {
                   if (i === question[questionNumber].correctAnswer) {
                     alert("Correct!");
                     if (questionNumber < question.length - 1) {
@@ -97,6 +102,11 @@
                     }
                   } else {
                     alert("Incorrect!");
+                    const blacklist = (
+                      await chrome.storage.sync.get({ blacklist: [] })
+                    ).blacklist;
+                    blacklist.push(window.location.toString());
+                    chrome.storage.sync.set({ blacklist: blacklist });
                   }
                 }}
               >
@@ -107,8 +117,8 @@
         </div>
       {/if}
     </div>
-  {/if}
-</div>
+  </div>
+{/if}
 
 <style>
 </style>

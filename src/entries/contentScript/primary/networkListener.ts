@@ -10,12 +10,21 @@ const setupNetworkListener = (callback) => {
         }
     }, 400);
 
+    let seen: number[] = [];
+
     chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         console.log("got message", msg);
 
+        if (seen.includes(msg.id)) {
+            console.log("skipping transcript processing (dupe)");
+            return
+        }
+        seen.push(msg.id);
+
         const el = document.querySelector("div.ytp-cued-thumbnail-overlay-image"); 
-        const style = el.attributes["style"];
-        const videoId = new RegExp("(?:vi|vi_webp)\/([\w\d_-]+)\/").exec(style)?.[1];
+        const style = el.attributes["style"]?.value;
+        console.log("trying to parse video id from style attribute", style);
+        const videoId = /(?:vi|vi_webp)\/([\w\d_-]+)\//.exec(style)?.[1];
         console.log("found video id", videoId);
 
         const adPlaying = !!document.querySelector("div.ad-showing");
@@ -23,7 +32,13 @@ const setupNetworkListener = (callback) => {
 
         if (videoId === msg.id && adPlaying) {
             console.log("running callback with transcript");
-            callback(msg.transcript);
+            callback(msg.id, msg.transcript);
+        } else {
+            if (!adPlaying) {
+                console.log("ignoring transcript because an ad is not playing")
+            } else {
+                console.log("ignoring transcript because transcript video id", msg.id, "does not match page video id", videoId)
+            }
         }
     });
 }

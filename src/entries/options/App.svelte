@@ -1,19 +1,30 @@
 <script lang="ts">
   import "$lib/app.postcss";
+  import OpenAI from "openai";
+
   let key = "";
   let keyInput: HTMLInputElement;
   chrome.storage.sync.get("gptKey", (data) => {
     key = data.gptKey;
   });
   let validating: boolean | "success" | "fail" = false;
-  const validate = () => {
+  const validate = async () => {
     validating = true;
     if (!keyInput.reportValidity()) return;
-    chrome.storage.sync.set({ gptKey: key });
     chrome.runtime.sendMessage({ type: "validate" });
-    setTimeout(() => {
+
+    const openai = new OpenAI({
+      apiKey: key,
+      dangerouslyAllowBrowser: true
+    })
+
+    try {
+      await openai.models.list()
+      validating = "success";
+      chrome.storage.sync.set({ gptKey: key });
+    } catch (e) {
       validating = "fail";
-    }, 5000);
+    }
   };
 </script>
 
